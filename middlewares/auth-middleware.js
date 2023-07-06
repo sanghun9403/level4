@@ -10,7 +10,7 @@ module.exports = async (req, res, next) => {
   try {
     // case 1 : accessToken과 refreshToken 둘다 없는 경우
     if (!refreshToken && !accessToken) {
-      return res.status(401).send({
+      return res.status(403).send({
         message: "로그인 후 이용 가능한 기능입니다.",
       });
     }
@@ -28,7 +28,7 @@ module.exports = async (req, res, next) => {
 
       if (!user) {
         res.clearCookie("authorization");
-        return res.status(401).json({
+        return res.status(403).json({
           message: "토큰 사용자가 존재하지 않습니다.",
         });
       }
@@ -49,7 +49,7 @@ module.exports = async (req, res, next) => {
   } catch (err) {
     if (err.name === "TokenExpiredError") {
       res.clearCookie("authorization");
-      return res.status(401).send({
+      return res.status(403).send({
         errorMessage: "만료된 토큰입니다. 다시 로그인 해주세요.",
       });
     } else {

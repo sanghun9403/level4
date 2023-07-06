@@ -67,9 +67,13 @@ router.post("/login", async (req, res) => {
       // 리프레시 토큰 생성
       const refreshToken = jwt.sign({}, process.env.JWT_SECRET_KEY, { expiresIn: "7d" });
       // 액세스 토큰 생성
-      const accessToken = jwt.sign({ userId: user.userId }, process.env.JWT_SECRET_KEY, {
-        expiresIn: "30m",
-      });
+      const accessToken = jwt.sign(
+        { userId: user.userId, nickname: user.nickname },
+        process.env.JWT_SECRET_KEY,
+        {
+          expiresIn: "30m",
+        }
+      );
       await Tokens.create({ tokenId: refreshToken, UserId: user.userId });
       res.cookie("authorization", `Bearer ${accessToken}`);
       return res.status(200).json({
@@ -116,7 +120,7 @@ router.post("/login", async (req, res) => {
       }
     }
   } catch (err) {
-    return res.status(400).json({
+    return res.status(403).json({
       message: "존재하지 않는 아이디 또는 잘못된 접근입니다.",
     });
   }
@@ -151,7 +155,7 @@ router.post("/switchAccount/:userId", async (req, res) => {
     } catch (err) {
       if (err.name === "TokenExpiredError") {
         await Tokens.destroy({ where: { tokenId: savedTokenUser.tokenId } });
-        return res.status(404).json({
+        return res.status(403).json({
           message: "refreshToken이 만료되었습니다. 다시 로그인해주세요",
         });
       }
