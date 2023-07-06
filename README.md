@@ -8,7 +8,7 @@
 
 ### API 명세서 링크
 
-https://sh-9403.notion.site/6e2d494e7b52406d854681412d2cfc6e?v=a508fbb992a944a4b81d69b325a74cf2&pvs=4
+https://www.notion.so/sh-9403/6e2d494e7b52406d854681412d2cfc6e?v=a508fbb992a944a4b81d69b325a74cf2
 
 **ERD**
 ![ERD](./assets/image/drawSQL-personal-export-2023-07-06.png)
