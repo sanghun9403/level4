@@ -3,11 +3,10 @@ const { Users, Tokens } = require("../models");
 
 // 사용자 인증 미들웨어
 module.exports = async (req, res, next) => {
-  const { authorization } = req.cookies;
-  const refreshToken = await Tokens.findOne({ order: [["createdAt", "DESC"]] });
-  const [accessTokenType, accessToken] = (authorization ?? "").split(" ");
-
   try {
+    const { authorization } = req.cookies;
+    const refreshToken = await Tokens.findOne({ order: [["createdAt", "DESC"]] });
+    const [accessTokenType, accessToken] = (authorization ?? "").split(" ");
     // case 1 : accessToken과 refreshToken 둘다 없는 경우
     if (!refreshToken && !accessToken) {
       return res.status(403).send({
