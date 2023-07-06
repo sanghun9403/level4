@@ -1,6 +1,6 @@
 const express = require("express");
-const { Op } = require("sequelize");
-const { Posts } = require("../models");
+const { Op, Sequelize } = require("sequelize");
+const { Posts, Likes } = require("../models");
 const authMiddleware = require("../middlewares/auth-middleware");
 const router = express.Router();
 
@@ -37,7 +37,22 @@ router.post("/posts", authMiddleware, async (req, res) => {
 // 게시글 전체조회
 router.get("/posts", async (req, res) => {
   const showPost = await Posts.findAll({
-    attributes: ["postId", "userId", "title", "nickname", "createdAt", "updatedAt"],
+    attributes: [
+      "postId",
+      "userId",
+      "title",
+      "nickname",
+      "createdAt",
+      "updatedAt",
+      [Sequelize.fn("COUNT", Sequelize.col("Likes.PostId")), "likes"],
+    ],
+    include: [
+      {
+        model: Likes,
+        attributes: [],
+      },
+    ],
+    group: ["postId"],
     order: [["createdAt", "DESC"]],
   });
 
